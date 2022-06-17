@@ -7,7 +7,7 @@ public static class ProductContext
 {
     public static readonly List<Product> Products = new List<Product>()
     {
-                new Product()
+                new Product() 
                 {
                     Name = "IPhone X",
                     Description = "This phone is the company's biggest change to its flagship smartphone in years. It includes a borderless.",
