@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 using Shopping.Client.Data;
 using Shopping.Client.Models;
 using System.Diagnostics;
@@ -8,15 +9,23 @@ namespace Shopping.Client.Controllers
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
+        private readonly HttpClient _client;
 
-        public HomeController(ILogger<HomeController> logger)
+        public HomeController(ILogger<HomeController> logger, IHttpClientFactory httpClientFactory)
         {
             _logger = logger;
+            _client = httpClientFactory.CreateClient("ShoppingAPIClient");
         }
 
-        public IActionResult Index()
+        public async  Task<IActionResult> Index()
         {
-            return View(ProductContext.Products);
+            var response = await _client.GetAsync("/api/Product");
+            var content = await response.Content.ReadAsStringAsync();
+
+            var productList = JsonConvert.DeserializeObject<IEnumerable<Product>>(content);
+
+
+            return View(productList);
         }
 
         public IActionResult Privacy()
